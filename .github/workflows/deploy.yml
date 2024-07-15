@@ -28,12 +28,19 @@ jobs:
         echo "$SSH_KEY" > ssh_key
         chmod 600 ssh_key
 
+    - name: Create directory on VM
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+      run: |
+        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "mkdir -p /home/$USERNAME/hello-api"
+
     - name: Deploy to VM
       env:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
       run: |
-        scp -i ssh_key -o StrictHostKeyChecking=no -r * $USERNAME@$HOST:/home/$USERNAME/Backend-API
+        scp -i ssh_key -o StrictHostKeyChecking=no -r * $USERNAME@$HOST:/home/$USERNAME/hello-api
         ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "
         pm2 stop sayHelloAPI || true &&
         cd /home/$USERNAME/hello-api &&
