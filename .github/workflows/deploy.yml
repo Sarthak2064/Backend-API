@@ -33,7 +33,7 @@ jobs:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
       run: |
-        scp -i ssh_key -o StrictHostKeyChecking=no -r * $USERNAME@$HOST:/home/$USERNAME/hello-api
+        scp -i ssh_key -o StrictHostKeyChecking=no -r * $USERNAME@$HOST:/home/$USERNAME/Backend-API
         ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "
         pm2 stop sayHelloAPI || true &&
         cd /home/$USERNAME/hello-api &&
