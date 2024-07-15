@@ -21,13 +21,22 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Prepare SSH key
+      env:
+        SSH_KEY: ${{ secrets.SSH_KEY }}
+      run: |
+        echo "$SSH_KEY" > ssh_key
+        chmod 600 ssh_key
+
     - name: Deploy to VM
       env:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
-        SSH_KEY: ${{ secrets.SSH_KEY }}
       run: |
-        echo "${{ secrets.SSH_KEY }}" > ssh_key
-        chmod 600 ssh_key
         scp -i ssh_key -o StrictHostKeyChecking=no -r * $USERNAME@$HOST:/home/$USERNAME/hello-api
-        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "cd /home/$USERNAME/hello-api && npm install && pm2 restart all || pm2 start index.js"
+        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "
+        pm2 stop sayHelloAPI || true &&
+        cd /home/$USERNAME/hello-api &&
+        npm install &&
+        pm2 start sayHelloAPI.js --name sayHelloAPI
+        "
