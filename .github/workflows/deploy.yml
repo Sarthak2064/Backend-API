@@ -1,4 +1,4 @@
-name: Deploy Backend API
+name: Deploy to VM
 
 on:
   push:
@@ -22,14 +22,12 @@ jobs:
       run: npm install
 
     - name: Deploy to VM
-      uses: appleboy/ssh-action@v0.1.6
-      with:
-        host: ${{ secrets.VM_HOST }}
-        username: ${{ secrets.VM_USER }}
-        key: ${{ secrets.VM_KEY }}
-        port: ${{ secrets.VM_PORT }}
-        script: |
-          cd /path/to/deployment/directory
-          git pull origin main
-          npm install
-          sudo pm2 restart all
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        SSH_KEY: ${{ secrets.SSH_KEY }}
+      run: |
+        echo "${{ secrets.SSH_KEY }}" > ssh_key
+        chmod 600 ssh_key
+        scp -i ssh_key -o StrictHostKeyChecking=no -r * $USERNAME@$HOST:/home/$USERNAME/hello-api
+        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "cd /home/$USERNAME/hello-api && npm install && pm2 restart all || pm2 start index.js"
