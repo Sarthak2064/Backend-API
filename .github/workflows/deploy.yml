@@ -47,4 +47,5 @@ jobs:
         cd /home/$USERNAME/hello-api &&
         npm install &&
         pm2 start sayHelloAPI.js --name sayHelloAPI
+        pm2 save
         "
