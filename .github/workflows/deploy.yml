@@ -36,7 +36,7 @@ jobs:
         ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "mkdir -p /home/$USERNAME/hello-api"
 
     - name: Print sayHelloAPI.js (Local)
-      run: cat sayHelloAPI.js
+      run: cat /hello-api/sayHelloAPI.js
 
     - name: Deploy to VM
       env:
