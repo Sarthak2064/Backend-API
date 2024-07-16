@@ -35,8 +35,11 @@ jobs:
       run: |
         ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "mkdir -p /home/$USERNAME/hello-api"
 
+    - name: Print directory structure (Local)
+      run: ls -l
+
     - name: Print sayHelloAPI.js (Local)
-      run: cat /hello-api/sayHelloAPI.js
+      run: cat sayHelloAPI.js
 
     - name: Deploy to VM
       env:
@@ -52,6 +55,13 @@ jobs:
         pm2 start sayHelloAPI.js --name sayHelloAPI &&
         pm2 save
         "
+
+    - name: Print directory structure (VM)
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+      run: |
+        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "ls -l /home/$USERNAME/hello-api"
 
     - name: Print sayHelloAPI.js (VM)
       env:
