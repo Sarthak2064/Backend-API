@@ -43,6 +43,7 @@ jobs:
         scp -i ssh_key -o StrictHostKeyChecking=no -r * $USERNAME@$HOST:/home/$USERNAME/hello-api
         ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "
         pm2 stop sayHelloAPI || true &&
+        pm2 delete sayHelloAPI || true &&
         cd /home/$USERNAME/hello-api &&
         npm install &&
         pm2 start sayHelloAPI.js --name sayHelloAPI
