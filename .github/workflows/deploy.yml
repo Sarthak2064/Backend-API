@@ -39,7 +39,7 @@ jobs:
       run: ls -l
 
     - name: Print sayHelloAPI.js (Local)
-      run: cat sayHelloAPI.js
+      run: cat hello-api/sayHelloAPI.js
 
     - name: Deploy to VM
       env:
@@ -50,7 +50,7 @@ jobs:
         ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "
         pm2 stop sayHelloAPI || true &&
         pm2 delete sayHelloAPI || true &&
-        cd /home/$USERNAME/hello-api &&
+        cd /home/$USERNAME/hello-api/hello-api &&
         npm install &&
         pm2 start sayHelloAPI.js --name sayHelloAPI &&
         pm2 save
@@ -61,14 +61,14 @@ jobs:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "ls -l /home/$USERNAME/hello-api"
+        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "ls -l /home/$USERNAME/hello-api/hello-api"
 
     - name: Print sayHelloAPI.js (VM)
       env:
         HOST: ${{ secrets.HOST }}
         USERNAME: ${{ secrets.USERNAME }}
       run: |
-        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "cat /home/$USERNAME/hello-api/sayHelloAPI.js"
+        ssh -i ssh_key -o StrictHostKeyChecking=no $USERNAME@$HOST "cat /home/$USERNAME/hello-api/hello-api/sayHelloAPI.js"
 
     - name: Verify deployment
       env:
